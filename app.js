@@ -17,23 +17,17 @@ mongoose.connect("mongodb://localhost:27017/coviddb",{useUnifiedTopology: true, 
 
 const hospitalSchema = new mongoose.Schema({
     name: String,
-    location: {
-      type: {
-        type: String, // Don't do `{ location: { type: String } }`
-        enum: ['Point'], // 'location.type' must be 'Point'
-        required: true
-      },
-      coordinates: {
-        type: [Number],
-        required: true
-      }
+    email: String,
+    coordinates: {
+        lat: Number,
+        long: Number
     }
   });
 
 const hospital=mongoose.model("Hospital",hospitalSchema);
 
 app.get('/',(req,res)=>{
-    res.render('');
+    res.render('index');
 });
 
 app.get('/admin/hospital',(req,res)=>{
