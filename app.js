@@ -2,10 +2,10 @@ const http=require('http');
 const path=require('path');
 
 const bodyParser=require('body-parser');
-const mongoose=require('mongoose');
 const express=require('express');
-
 const app=express();
+const mongoose=require('mongoose');
+
 
 app.set('view engine','ejs');
 
@@ -34,6 +34,28 @@ app.get('/admin/hospital',(req,res)=>{
     res.render('adminpage');
 });
 
+app.get('/new-user/patient',(req,res)=>{
+    res.render('patient_registration');
+});
+
+app.post('/admin/hospital',(req,res)=>{
+    console.log(req.body.longi);
+    // if (req.body.lati!=0&&req.body.longi!=0)
+    // {
+    const newho=new hospital({
+        name: req.body.nameOfHospital,
+        email: req.body.hospitalemail,
+        coordinates: {
+            lat: req.body.lati,
+            long: req.body.longi
+        }
+    });
+    newho.save();
+    console.log('success');
+//  }
+    
+    // res.redirect('/');
+})
 
 app.listen(3000,function() {
     console.log("server running on port 3000");
