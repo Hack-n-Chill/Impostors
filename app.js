@@ -32,6 +32,7 @@ mongoose.connect("mongodb://localhost:27017/coviddb",{useUnifiedTopology: true, 
 mongoose.set("useCreateIndex", true);
 
 const userSchema = new mongoose.Schema ({
+    name: String,
     email: String,
     googleId: String,
     role: String
@@ -66,7 +67,7 @@ const hospitalSchema = new mongoose.Schema({
 
 const hospital=mongoose.model("Hospital",hospitalSchema);
 
-
+let userid;
 
 passport.use(new GoogleStrategy({
     clientID: process.env.CLIENT_ID,
@@ -75,7 +76,9 @@ passport.use(new GoogleStrategy({
     userProfileURL: "https://www.googleapis.com/oauth2/v3/userinfo"
   },
   function(accessToken, refreshToken, profile, cb) {
-    User.findOrCreate({ googleId: profile.id }, function (err, user) {
+    console.log(profile);
+    userid=profile.displayName;
+    User.findOrCreate({ googleId: profile.id,name: profile.displayName }, function (err, user) {
       return cb(err, user);
     });
   }
@@ -93,7 +96,9 @@ app.get('/auth/google/success',
   passport.authenticate('google', { failureRedirect: '/' }),
   function(req, res) {
     // Successful authentication, redirect home.
-    res.redirect('/admin/hospital');
+    res.render('front_page',{
+      name: userid
+    })
   });
 
 app.get('/admin/hospital',(req,res)=>{
@@ -107,6 +112,10 @@ app.get("/login", function(req, res){
 app.get("/register", function(req, res){
   res.render("register");
 });
+
+app.get('/new-user',(req,res)=>{
+  
+})
 
 app.get('/new-user/patient',(req,res)=>{
     res.render('patient_registration');
