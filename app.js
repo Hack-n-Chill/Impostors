@@ -33,9 +33,8 @@ mongoose.set("useCreateIndex", true);
 
 const userSchema = new mongoose.Schema ({
     email: String,
-    password: String,
     googleId: String,
-    secret: String
+    role: String
   });
 
 userSchema.plugin(passportLocalMongoose);
@@ -44,6 +43,17 @@ userSchema.plugin(findOrCreate);
 const User = new mongoose.model("User", userSchema);
 
 passport.use(User.createStrategy());
+
+passport.serializeUser(function(user, done) {
+  done(null, user.id);
+});
+
+passport.deserializeUser(function(id, done) {
+  User.findById(id, function(err, user) {
+    done(err, user);
+  });
+});
+
 
 const hospitalSchema = new mongoose.Schema({
     name: String,
@@ -78,6 +88,13 @@ app.get('/',(req,res)=>{
 app.get("/auth/google",
   passport.authenticate('google', { scope: ["profile"] })
 );
+
+app.get('/auth/google/success', 
+  passport.authenticate('google', { failureRedirect: '/' }),
+  function(req, res) {
+    // Successful authentication, redirect home.
+    res.redirect('/admin/hospital');
+  });
 
 app.get('/admin/hospital',(req,res)=>{
     res.render('adminpage');
