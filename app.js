@@ -168,6 +168,47 @@ app.post('/admin/hospital/location',(req,res)=>{
   // 
 });
 
+app.post('/admin/hospital/manual',(req,res)=>{
+  let addresscleaned=req.body.address.replace(/\s/g, '+');
+  let citycleaned=req.body.city.replace(/\s/g, '+');
+  let countrycleaned=req.body.country.replace(/\s/g, '+');
+  let postalcleaned=req.body.postal.replace(/\s/g, '+');
+  let addressfind="https://geocode.search.hereapi.com/v1/geocode?apikey="+process.env.MAP_APIKEY+"&q="+addresscleaned+"%2C"+postalcleaned+"%2C"+citycleaned+"%2C"+countrycleaned+"&lang=en-US";
+  https.get(addressfind,resp=>{
+    let body = "";
+
+    resp.on("data", (chunk) => {
+        body += chunk;
+    });
+
+    resp.on("end", () => {
+        try {
+            let json = JSON.parse(body);
+            // do something with JSON
+            addr = json.items[0].title;
+            latt= json.items[0].position.lat;
+            longt=json.items[0].position.lng;
+            const dat=new hospital({
+              name: tempname,
+              email: tempemail,
+              coordinates: {
+                lat: latt,
+                long: longt
+              },
+              address: addr
+            });
+            res.render('successhospital',{
+              name: tempname,
+              email: tempemail
+            });
+            dat.save();
+        } catch (error) {
+            console.error(error.message);
+        };
+    });
+  });
+})
+
 app.post('/admin/hospital/:action',(req,res)=>{
   let act=req.params.action;
   if(act=='save') {

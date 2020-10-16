@@ -38,3 +38,14 @@ function revert() {
     method: 'POST'
   });
 }
+let lati,longi;
+let checker=false;
+function getLocation2() {
+  if (navigator.geolocation) {
+    navigator.geolocation.getCurrentPosition(position=>{
+      lati=position.coords.latitude;
+      longi=position.coords.longitude;
+      checker=true;
+    });
+  }
+}
