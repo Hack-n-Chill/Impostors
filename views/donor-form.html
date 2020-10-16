@@ -1,0 +1,182 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <title>Covid Care Application</title>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <link rel="stylesheet" href="css/bootstrap.min.css">
+  <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.16.0/umd/popper.min.js"></script>
+  <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
+  <link rel="stylesheet" href="https://www.w3schools.com/w3css/4/w3.css">
+  
+  <link rel="stylesheet" href="css/styles.css">
+  <link href='https://fonts.googleapis.com/css?family=Oxygen:400,300,700' rel='stylesheet' type='text/css'>
+  <link href='https://fonts.googleapis.com/css?family=Lora' rel='stylesheet' type='text/css'>
+</head>
+<body>
+  <header>
+    <nav id="header-nav" class="navbar navbar-default">
+      <div class="container">
+        <div class="navbar-header">
+          <a href="index.html" class="pull-left visible-md visible-lg">
+            <div id="logo-img" alt="Logo image"></div>
+          </a>
+
+          <div class="navbar-brand">
+            <a href="index.html"><h1>Covid Care For You</h1></a>
+          </div>
+        </div>
+        
+        <div id="collapsable-nav" class="collapse navbar-collapse">
+           <ul id="nav-list" class="nav navbar-nav navbar-right">
+            <li id="navHomeButton" class="visible-xs active">
+              <a href="index.html">
+                <span class="glyphicon glyphicon-home"></span> Home</a>
+            </li>
+            <li>
+              <a href="#">
+                <span class="glyphicon glyphicon-certificate"></span><br class="hidden-xs"> Emergency</a>
+            </li>
+          </ul><!-- #nav-list -->
+        </div><!-- .collapse .navbar-collapse -->
+      </div><!-- .container -->
+    </nav><!-- #header-nav -->
+  </header>
+<div id="main-content" class="container">
+    <div id="head1" class="heading w3-panel w3-padding-small w3-gray">
+        <h1>Donor Form</h1>
+    </div>
+    <br>
+    <div class="w3-panel w3-padding-small w3-light-gray">
+        <div class="row">
+        <div class="col-md-4">
+            
+                <span><h5 class="topic">Did you ever get covid?</h5></span>
+                <div class="form-check-inline">
+                    <label class="form-check-label">
+                      <input type="radio" class="form-check-input" name="yes">Yes
+                    </label>
+                  </div>
+                  <div class="form-check-inline">
+                    <label class="form-check-label">
+                      <input type="radio" class="form-check-input" name="no">No
+                    </label>
+                  </div>
+
+        </div>
+        <div class="col-md-4">
+            <label class="topic" for="Name">Name</label>
+            <br>
+            <input class="field w3-input" type="text" id="name" name="name" placeholder="Your name.." required>
+        </div>
+        <div class="col-md-4">
+            <label class="topic" for="email">Email</label>
+            <br>
+            <input class="field w3-input" type="email" id="email" name="email" placeholder="Your email.." required>
+        </div>
+    </div>
+    <div class="row">
+        <div class="col-md-4">          
+                <span ><h6 class="topic">Gender</h6></span>
+                
+                
+               <!-- <label class="radio-inline"><input type="radio" name="male" checked>Male</label>
+                <label class="radio-inline"><input type="radio" name="female">Female</label>
+                <label class="radio-inline"><input type="radio" name="other">Other</label>
+               -->
+
+               <div class="form-check-inline">
+                <label class="form-check-label">
+                  <input type="radio" class="form-check-input" name="male">Male
+                </label>
+              </div>
+              <div class="form-check-inline">
+                <label class="form-check-label">
+                  <input type="radio" class="form-check-input" name="female">Female
+                </label>
+              </div>
+              <div class="form-check-inline disabled">
+                <label class="form-check-label">
+                  <input type="radio" class="form-check-input" name="other" >Other
+                </label>
+              </div>
+
+
+
+        </div>
+        <div class="col-md-4">
+            <label class="topic" for="Address">Address</label>
+            <br>
+            <input class="field w3-input" type="text" id="address" name="address" placeholder="Your address.." >
+        </div>
+        <div class="col-md-4">
+            <label class="topic" for="phone">Phone Number</label>
+            <br>
+            <input class="field w3-input" type="text" id="phone" name="phone" placeholder="Your phone number.." required>
+        </div>
+    </div>
+    <div class="row">
+        <div class="col-md-4">
+            <label class="topic" for="Date">Screening Date</label>
+            <br>
+            <input class="field w3-input" type="date" id="date" name="date" placeholder="Date of screening" >
+        </div>
+        <div class="col-md-4">
+            <label class="topic" for="Age">Age</label>
+            <br>
+            <input class="field w3-input" type="number" id="age" name="age" placeholder="Your age.." >
+        </div>
+        <div class="col-md-4">
+            <label class="topic" for="Bloodgroup">Blood Group</label>
+            <br>
+            <select class="blood field w3-select w3-border" name="option">
+                <option value="" disabled selected>Select</option>
+                <option value="A+">A+</option>
+                <option value="B+">B+</option>
+                <option value="O+">O+</option>
+                <option value="AB+">AB+</option>
+                <option value="A-">A-</option>
+                <option value="B-">B-</option>
+                <option value="O-">O-</option>
+                <option value="AB-">AB-</option>
+              </select>
+        </div>
+    </div>
+
+    </div>
+    <div class="row">
+        <div class="col-md-11"></div> 
+        <button type="button" class="w3-button w3-blue" ><a href="#">Submit</a></button>
+    </div>
+</div>
+<footer class="panel-footer">
+  <div class="container">
+    <div class="row">
+      <section id="hours" class="col-sm-4">
+        <span>contact us:</span><br>
+        Akshat Gokulka <br>
+        akshat.gokulka@gmail.com<br>
+        Amit Chakraborty<br>
+        amit.chakraborty09@gmail.com<br>
+        Harsit Daga<br>
+        harsitdaga20@gmail.com
+        <hr class="visible-xs">
+      </section>
+      <section id="address" class="col-sm-4">
+        <span>Address:</span><br>
+        Chemical Engineering <br>
+        Jadavpur University
+        <p>* Provide us your location.</p>
+        <hr class="visible-xs">
+      </section>
+      <section id="testimonials" class="col-sm-4">
+        <p>"The best application for hospital services"</p>
+        <p>"Amazing sevices with home like care!"</p>
+      </section>
+    </div>
+    <div class="text-center">&copy; Copyright Health Care 2020</div>
+  </div>
+</footer>
+</body>
+</html>

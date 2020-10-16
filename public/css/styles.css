@@ -1,13 +1,13 @@
 body {
   font-size: 16px;
   color: #fff;
-  background-color: #61122f;
+  background-color: white;
   font-family: "Oxygen", sans-serif;
 }
 
 /** HEADER **/
 #header-nav {
-  background-color: #f6b319;
+  background-color: skyblue;
   border-radius: 0;
   border: 0;
 }
@@ -26,7 +26,7 @@ body {
   /* Title name */
   font-family: "Lora", serif;
   color: #557c3e;
-  font-size: 1.5em;
+  font-size: 3em;
   text-transform: uppercase;
   font-weight: bold;
   text-shadow: 1px 1px 1px #222;
@@ -94,7 +94,36 @@ body {
   margin-top: 25px;
 }
 /* END FOOTER */
+/*START CONTENT */
+#main-content {
+  color: black;
+}
+#head1 {
+  text-align: center;
+  text-transform: uppercase;
+  font-family: "Times New Roman", Times, serif;
+  font-size: 50px;
+  background-color: skyblue;
+}
+.center {
+  margin: 1%;
+  position: relative;
+  left: 45%;
+}
+h2 {
+  text-align: center;
+  text-transform: uppercase;
+}
+.section {
+  background: lightcoral;
+  height: auto;
+  position: relative;
+  margin: 10em 10em 0 10em;
+  padding: 5%;
+  border: 3px solid black;
+}
 
+/*END CONTENT */
 /********** Large devices only **********/
 @media (min-width: 1200px) {
 }
