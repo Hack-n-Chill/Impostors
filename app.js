@@ -1,4 +1,4 @@
-const http=require('http');
+const https=require('https');
 const path=require('path');
 
 const bodyParser=require('body-parser');
@@ -10,13 +10,14 @@ const passport = require("passport");
 const passportLocalMongoose = require("passport-local-mongoose");
 const GoogleStrategy = require('passport-google-oauth20').Strategy;
 const findOrCreate = require('mongoose-findorcreate');
+const { json } = require('body-parser');
 require('dotenv').config();
 
 
 app.set('view engine','ejs');
 
 app.use(express.static(path.join(__dirname,'public')));
-
+app.use(json({limit: '1mb'}));
 app.use(bodyParser.urlencoded({extended: true}));
 
 app.use(session({
@@ -62,7 +63,8 @@ const hospitalSchema = new mongoose.Schema({
     coordinates: {
         lat: Number,
         long: Number
-    }
+    },
+    address: String
   });
 
 const hospital=mongoose.model("Hospital",hospitalSchema);
@@ -102,7 +104,14 @@ app.get('/auth/google/success',
   });
 
 app.get('/admin/hospital',(req,res)=>{
-    res.render('adminpage');
+    res.render('adminpage',{
+      step1: "active",
+      step2: "",
+      prevbut: "disabled",
+      form1: "",
+      form2: "hidden",
+      nameOfHospital: ""
+    });
 });
 
 app.get("/login", function(req, res){
@@ -113,31 +122,80 @@ app.get("/register", function(req, res){
   res.render("register");
 });
 
-app.get('/new-user',(req,res)=>{
-  
-})
-
 app.get('/new-user/patient',(req,res)=>{
     res.render('patient_registration');
 });
-
+let tempemail,tempname;
 app.post('/admin/hospital',(req,res)=>{
-    console.log(req.body.longi);
-    // if (req.body.lati!=0&&req.body.longi!=0)
-    // {
-    const newho=new hospital({
-        name: req.body.nameOfHospital,
-        email: req.body.hospitalemail,
-        coordinates: {
-            lat: req.body.lati,
-            long: req.body.longi
-        }
-    });
-    newho.save();
-    console.log('success');
-//  }
     
-    // res.redirect('/');
+    tempemail=req.body.hospitalemail;
+    tempname=req.body.nameOfHospital;
+    res.render('adminpage',{
+      step1: "",
+      step2: "active",
+      prevbut: "",
+      form1: "hidden",
+      form2: "",
+      nameOfHospital: tempname
+    });
+
+});
+let addr,longt,latt;
+app.post('/admin/hospital/location',(req,res)=>{
+  console.log(req.body);
+  console.log(req.body.lati);
+  longt=req.body.longi;
+  latt=req.body.lati;
+  let addressfind="https://revgeocode.search.hereapi.com/v1/revgeocode?apikey="+process.env.MAP_APIKEY+"&at="+req.body.lati+","+req.body.longi+"&lang=en-US";
+  https.get(addressfind,resp=>{
+    let body = "";
+
+    resp.on("data", (chunk) => {
+        body += chunk;
+    });
+
+    resp.on("end", () => {
+        try {
+            let json = JSON.parse(body);
+            // do something with JSON
+            addr = json.items[0].title;
+            res.send(addr);
+        } catch (error) {
+            console.error(error.message);
+        };
+    });
+  });
+  // 
+});
+
+app.post('/admin/hospital/:action',(req,res)=>{
+  let act=req.params.action;
+  if(act=='save') {
+    const dat=new hospital({
+      name: tempname,
+      email: tempemail,
+      coordinates: {
+        lat: latt,
+        long: longt
+      },
+      address: addr
+    });
+    res.render('successhospital',{
+      name: tempname,
+      email: tempemail
+    });
+    dat.save();
+    
+  } else if (act=='reject') {
+    res.render('adminpage',{
+      step1: "",
+      step2: "active",
+      prevbut: "",
+      form1: "hidden",
+      form2: "",
+      nameOfHospital: tempname
+    });
+  }
 })
 
 app.listen(3000,function() {

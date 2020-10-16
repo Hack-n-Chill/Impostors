@@ -8,10 +8,33 @@ function getLocation() {
 }
 
 function showPosition(position) {
-    document.getElementsByName("lati").value = position.coords.latitude; 
-  alert( document.getElementsByName("lati").value);
-  document.getElementsByName("longi").value = position.coords.longitude;
-  // $( "input[name='lati']" ).val( position.coords.latitude);
-  // $("input[name='longi']").val(position.coords.longitude);
-  
+  const lati=position.coords.latitude;
+  const longi=position.coords.longitude;
+  const data={lati , longi};
+  fetch('/admin/hospital/location', {
+    method: 'POST', // or 'PUT'
+    headers: {
+      'Content-Type': 'application/json',
+    },
+    body: JSON.stringify(data)
+  }).then(res => {
+    return res.text();
+    
+  }).then(fina=>{
+    let modx=document.getElementById("address");
+    modx.innerHTML=fina;
+    console.log(fina);
+  });
+ 
+}
+
+function savetodb() {
+  fetch('/admin/hospital/save',{
+    method: 'POST'
+  });
+}
+function revert() {
+  fetch('/admin/hospital/reject',{
+    method: 'POST'
+  });
 }

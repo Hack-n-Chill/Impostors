@@ -8,10 +8,23 @@
     <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.16.0/umd/popper.min.js"></script>
     <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
       
-    <title>Document</title>
+    <title>Add Hospital</title>
 </head>
 <body>
-    <form method="POST" action="/admin/hospital">
+  <header><nav aria-label="...">
+    <ul class="pagination">
+      <li class="page-item <%=prevbut %>">
+        <a class="page-link" href="/admin/hospital">Previous</a>
+      </li>
+      <li class="page-item <%=step1 %>"><a class="page-link" href="#">1</a></li>
+      <li class="page-item <%=step2 %>" aria-current="page">
+        <span class="page-link">
+          2
+        </span>
+      </li>
+    </ul>
+  </nav></header>
+    <form method="POST" action="/admin/hospital" <%= form1 %> >
         <div class="form-group">
           <label for="hospitalemail">Email address</label>
           <input type="email" class="form-control" id="hospitalemail" name="hospitalemail" placeholder="name@example.com" required>
@@ -20,18 +33,34 @@
               <label for="hospitalname">Name of hospital</label>
               <input type="text" class="form-control" name="nameOfHospital" id="hospitalname" placeholder="Hospital name" required>
             </div>
-            <input type="number" name="lati" hidden>
-            <input type="number" name="longi" hidden>
-            <div class="btn-group" role="group" aria-label="Basic example">
-              <button type="button" class="btn btn-secondary" onclick="getLocation()" >Use current location as address</button>
-              <button type="button" class="btn btn-secondary">Enter locality</button>
-            </div>
-            <button type="submit" class="btn btn-primary">Add hospital</button>
+            
+            <button type="submit" class="btn btn-primary">Next</button>
       </form>
-      <script>
-      // document.getElementsByName("lati").value=0;
-      // document.getElementsByName("longi").value=0;
-      </script>
+      <h1 <%=form2 %>>Where is <%=nameOfHospital%>?</h1>
+      <button <%=form2 %> type="button" class="btn btn-secondary" onclick="getLocation()" data-toggle="modal" data-target="#exampleModal">Use current location as address</button>
+      <div class="modal fade" id="exampleModal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+        <div class="modal-dialog">
+          <div class="modal-content">
+            <div class="modal-header">
+              <h5 class="modal-title" id="exampleModalLabel">Check your approximate address</h5>
+              <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                <span aria-hidden="true">&times;</span>
+              </button>
+            </div>
+            <div class="modal-body" id="address">
+              
+            </div>
+            <div class="modal-footer">
+              <form method="POST" action="/admin/hospital/reject"></form>
+              <button type="submit" class="btn btn-secondary" data-dismiss="modal">Go back,address is wrong!</button>
+            </form>
+              <form method="POST" action="/admin/hospital/save">
+              <button type="submit" class="btn btn-primary">Save Address</button>
+            </form>
+            </div>
+          </div>
+        </div>
+      </div>
       <script src="/js/admin.js"></script>
 </body>
 </html>
