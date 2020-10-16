@@ -4,16 +4,11 @@
   <title>Covid Care Application</title>
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
-  <link rel="stylesheet" href="css/bootstrap.min.css">
-  <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
-  <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.16.0/umd/popper.min.js"></script>
-  <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
-  <link rel="stylesheet" href="https://www.w3schools.com/w3css/4/w3.css">
-  
-  <link rel="stylesheet" href="css/styles.css">
-  <link href='https://fonts.googleapis.com/css?family=Oxygen:400,300,700' rel='stylesheet' type='text/css'>
-  <link href='https://fonts.googleapis.com/css?family=Lora' rel='stylesheet' type='text/css'>
-</head>
+  <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/3.3.6/css/bootstrap.min.css" integrity="sha384-1q8mTJOASx8j1Au+a5WDVnPi2lkFfwwEAa8hDDdjZlpLegxhjVME1fgjWPGmkzs7" crossorigin="anonymous">
+        <link rel="stylesheet" href="/css/styles.css">  
+        <link href='https://fonts.googleapis.com/css?family=Oxygen:400,300,700' rel='stylesheet' type='text/css'>
+        <link href='https://fonts.googleapis.com/css?family=Lora' rel='stylesheet' type='text/css'>
+    </head>
 <body>
   <header>
     <nav id="header-nav" class="navbar navbar-default">
@@ -35,9 +30,10 @@
                 <span class="glyphicon glyphicon-home"></span> Home</a>
             </li>
             <li>
-              <a href="#">
-                <span class="glyphicon glyphicon-certificate"></span><br class="hidden-xs"> Emergency</a>
-            </li>
+              <li id="navMenuButton">
+                <a href="/" >
+                  <span class="glyphicon glyphicon-log-out"></span><br class="hidden-xs">Log Out</a>
+              </li>
           </ul><!-- #nav-list -->
         </div><!-- .collapse .navbar-collapse -->
       </div><!-- .container -->
@@ -55,12 +51,12 @@
                 <span><h5 class="topic">Did you ever get covid?</h5></span>
                 <div class="form-check-inline">
                     <label class="form-check-label">
-                      <input type="radio" class="form-check-input" name="yes">Yes
+                      <input type="radio" class="form-check-input" name="covid-check">Yes
                     </label>
                   </div>
                   <div class="form-check-inline">
                     <label class="form-check-label">
-                      <input type="radio" class="form-check-input" name="no">No
+                      <input type="radio" class="form-check-input" name="covid-check">No
                     </label>
                   </div>
 
@@ -88,17 +84,17 @@
 
                <div class="form-check-inline">
                 <label class="form-check-label">
-                  <input type="radio" class="form-check-input" name="male">Male
+                  <input type="radio" class="form-check-input" name="gender">Male
                 </label>
               </div>
               <div class="form-check-inline">
                 <label class="form-check-label">
-                  <input type="radio" class="form-check-input" name="female">Female
+                  <input type="radio" class="form-check-input" name="gender">Female
                 </label>
               </div>
               <div class="form-check-inline disabled">
                 <label class="form-check-label">
-                  <input type="radio" class="form-check-input" name="other" >Other
+                  <input type="radio" class="form-check-input" name="gender" >Other
                 </label>
               </div>
 

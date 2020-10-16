@@ -98,7 +98,7 @@ app.get('/auth/google/success',
   passport.authenticate('google', { failureRedirect: '/' }),
   function(req, res) {
     // Successful authentication, redirect home.
-    res.render('front_page',{
+    res.render('aftersigin',{
       name: userid
     })
   });
@@ -122,8 +122,11 @@ app.get("/register", function(req, res){
   res.render("register");
 });
 
-app.get('/new-user/patient',(req,res)=>{
+app.get('/new-user/:role',(req,res)=>{
+    if(req.params.role=='patient')
     res.render('patient_registration');
+    else if (req.params.role=='donor')
+    res.render('donor-form');
 });
 let tempemail,tempname;
 app.post('/admin/hospital',(req,res)=>{
