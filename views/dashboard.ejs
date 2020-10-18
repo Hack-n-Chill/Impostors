@@ -1,0 +1,135 @@
+<!doctype html>
+<html lang="en">
+    <head>
+        <meta charset="utf-8">
+        <meta http-equiv="X-UA-Compatible" content="IE=edge">
+        <meta name="viewport" content="width=device-width, initial-scale=1">
+        <title>Covid Care Application</title>
+        <link rel="stylesheet" href="css/bootstrap.min.css">
+        <link rel="stylesheet" href="css/styles.css">
+        <link href='https://fonts.googleapis.com/css?family=Oxygen:400,300,700' rel='stylesheet' type='text/css'>
+        <link href='https://fonts.googleapis.com/css?family=Lora' rel='stylesheet' type='text/css'>
+        <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.4.1/css/bootstrap.min.css">
+        <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+        <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.4.1/js/bootstrap.min.js"></script>
+        <style>
+        .modal-header, h4, .close {
+            background-color: #5cb85c;
+            color:white !important;
+            text-align: center;
+            font-size: 30px;
+        }
+        .modal-footer {
+            background-color: #f9f9f9;
+        }
+        </style>
+    </head>
+    <body>
+        <header>
+            <nav id="header-nav" class="navbar navbar-default">
+              <div class="container">
+                <div class="navbar-header">
+                  <a href="index.html" class="pull-left visible-md visible-lg">
+                    <div id="logo-img" alt="Logo image"></div>
+                  </a>
+        
+                  <div class="navbar-brand">
+                    <a href="index.html"><h1>Covid Care For You</h1></a>
+                  </div>
+                </div>
+                
+                <div id="collapsable-nav" class="collapse navbar-collapse">
+                   <ul id="nav-list" class="nav navbar-nav navbar-right">
+                    <li id="navHomeButton" class="visible-xs active">
+                      <a href="index.html">
+                        <span class="glyphicon glyphicon-home"></span> Home</a>
+                    </li>
+                    <li id="navMenuButton">
+                      <a href="#" >
+                        <span class="glyphicon glyphicon-log-out"></span><br class="hidden-xs">Log Out</a>
+                    </li>
+                  </ul><!-- #nav-list -->
+                </div><!-- .collapse .navbar-collapse -->
+              </div><!-- .container -->
+            </nav><!-- #header-nav -->
+        </header>
+        <div id="main-content" class="container">
+            <h1 id="head1">Doctor Dashboard</h1>
+            <button type="button" class="btn btn-default btn-lg" id="myBtn">ADD PATIENT</button>
+
+  <!-- Modal -->
+  <div class="modal fade" id="myModal" role="dialog">
+    <div class="modal-dialog">
+    
+      <!-- Modal content-->
+      <div class="modal-content">
+        <div class="modal-header" style="padding:35px 50px;">
+          <button type="button" class="close" data-dismiss="modal">&times;</button>
+          <h4><span class="glyphicon glyphicon-pencil"></span>ADD PATIENT </h4>
+        </div>
+        <div class="modal-body" style="padding:40px 50px;">
+          <form role="form">
+            <div class="form-group">
+              <label for="usrname"><span class="glyphicon glyphicon-user"></span> Username</label>
+              <input type="text" class="form-control" id="usrname" placeholder="Enter email">
+            </div>
+            <div class="form-group">
+              <label for="name"><span class="glyphicon glyphicon-user"></span> Name</label>
+              <input type="text" class="form-control" id="psw" placeholder="Enter patient name">
+            </div>
+            <div class="form-group">
+                <span ><h6 class="type">Patient Type</h6></span>
+                <input type="radio" id="bed" name="patient type" value="bed">
+                <label for="bed">Bed</label><br>
+                <input type="radio" id="home" name="patient type" value="home">
+                <label for="home">Home</label><br>
+             </div>
+              <button type="submit" class="btn btn-success btn-block"><span class="glyphicon glyphicon-off"></span> ADD</button>
+          </form>
+        </div>
+        <div class="modal-footer">
+          <button type="submit" class="btn btn-danger btn-default pull-left" data-dismiss="modal"><span class="glyphicon glyphicon-remove"></span> Cancel</button>
+        </div>
+      </div>
+      
+    </div>
+  </div> 
+</div>
+<script>
+    $(document).ready(function(){
+      $("#myBtn").click(function(){
+        $("#myModal").modal();
+      });
+    });
+    </script>
+        </div>
+    <footer class="panel-footer">
+        <div class="container">
+          <div class="row">
+            <section id="hours" class="col-sm-4">
+              <span>contact us:</span><br>
+              Akshat Gokulka <br>
+              akshat.gokulka@gmail.com<br>
+              Amit Chakraborty<br>
+              amit.chakraborty09@gmail.com<br>
+              Harsit Daga<br>
+              harsitdaga20@gmail.com
+              <hr class="visible-xs">
+            </section>
+            <section id="address" class="col-sm-4">
+              <span>Address:</span><br>
+              Chemical Engineering <br>
+              Jadavpur University
+              <p>* Provide us your location.</p>
+              <hr class="visible-xs">
+            </section>
+            <section id="testimonials" class="col-sm-4">
+              <p>"The best application for hospital services"</p>
+              <p>"Amazing sevices with home like care!"</p>
+            </section>
+          </div>
+          <div class="text-center">&copy; Copyright Health Care 2020</div>
+        </div>
+      </footer>
+    </body>
+</html>

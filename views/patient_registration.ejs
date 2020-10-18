@@ -8,51 +8,38 @@
   <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
   <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.16.0/umd/popper.min.js"></script>
   <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
-
   <style>
-      
-      
+    #unhidet {
+      margin-left: 40px;
+    }
+    #unhide1 {
+      margin-left: 40px;
+    }
+    #unhide2 {
+      margin-left: 40px;
+    }
   </style>
 </head>
 <body>
-
 <div class="container" >
   <h2>Patient Registration</h2>
     <div class="form-group">
       <label for="name">Patient Name:</label>
-      <input type="text" class="form-control col-md-6 " id="name" placeholder="Enter Patient's name" name="name">
+      <input type="text" class="form-control col-md-6 " id="name" value="<%=name%>" disabled name="name">
       
     </div>
-    <div class="dropdown">
-        <button class="btn btn-primary dropdown-toggle" type="button" data-toggle="dropdown">Service Type
-        <span class="caret"></span></button>
-        <ul class="dropdown-menu">
-          <li><a href="#"> Bed Required</a></li>
-          <li><a href="#"> Home care</a></li>
-        </ul>
-      </div>
+    <label for="email">Email:</label>
+    <input type="email" class="form-control col-md-6 " id="email" value=<%=email%> disabled name="email">
+     
       <br>
-    <div class="form-group">
-        <label for="phone_number">Contact Number:</label>
-        <input type="text" class="form-control col-md-6" id="phone_number" placeholder="Enter Phone number" name="Phone_number">
-      </div>
-    <div class="form-group">
-      <label for="age">Age (in years):</label>
-      <input type="number" class="form-control col-md-6" id="age" placeholder="Enter Patient's age" name="age">
-    </div>
-    <div class="form-group">
-        <label for="blood group">Blood Group:</label>
-        <input type="text" class="form-control col-md-6" id="blood_group" placeholder="Enter Patients Blood group" name="blood_group">
-      </div>
-    <div class="form-group form-check">
-      <label class="form-check-label">
-        <input class="form-check-input" type="checkbox" name="remember"> Remember me
-      </label>
-    </div>
-    <button type="submit" class="btn btn-primary">Submit</button>
 
-  
-</div>
+    
+    <p>Please proceed if you are a patient yourself, covid positive and need to see a doctor.(Also check if the above details are correct)</p>
+    <button type="button" class="btn btn-primary" onclick="showlocform()">Next</button>
+  </div>
+    <h2 id="unhidet" <%=form2%>>Where are you?</h2>
+    <%-include('partials/locationpatient')-%>
+  <script src="/js/patientreg.js"></script>
 
 </body>
 </html>

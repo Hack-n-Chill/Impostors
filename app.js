@@ -13,7 +13,11 @@ const findOrCreate = require('mongoose-findorcreate');
 const { json } = require('body-parser');
 require('dotenv').config();
 
-
+const adminroute=require('./controllers/admincallback');
+const authenticate=require('./controllers/authenticate');
+const regpatient=require('./controllers/patientnew');
+let {addr,longt,latt,tempemail,tempname}=require('./models/variables');
+const {hospital, Patient}=require('./models/mongoschemas');
 app.set('view engine','ejs');
 
 app.use(express.static(path.join(__dirname,'public')));
@@ -35,11 +39,14 @@ mongoose.set("useCreateIndex", true);
 const userSchema = new mongoose.Schema ({
     name: String,
     email: String,
-    googleId: String,
-    role: String
+    googleId: {type: String, unique: true }
   });
 
-userSchema.plugin(passportLocalMongoose);
+
+
+userSchema.plugin(passportLocalMongoose,{
+  usernameField: "googleId"
+});
 userSchema.plugin(findOrCreate);
 
 const User = new mongoose.model("User", userSchema);
@@ -56,19 +63,6 @@ passport.deserializeUser(function(id, done) {
   });
 });
 
-
-const hospitalSchema = new mongoose.Schema({
-    name: String,
-    email: String,
-    coordinates: {
-        lat: Number,
-        long: Number
-    },
-    address: String
-  });
-
-const hospital=mongoose.model("Hospital",hospitalSchema);
-
 let userid;
 
 passport.use(new GoogleStrategy({
@@ -78,9 +72,8 @@ passport.use(new GoogleStrategy({
     userProfileURL: "https://www.googleapis.com/oauth2/v3/userinfo"
   },
   function(accessToken, refreshToken, profile, cb) {
-    console.log(profile);
     userid=profile.displayName;
-    User.findOrCreate({ googleId: profile.id,name: profile.displayName }, function (err, user) {
+    User.findOrCreate({ googleId: profile.id},{name: profile.displayName,email: profile._json.email}, function (err, user) {
       return cb(err, user);
     });
   }
@@ -90,156 +83,118 @@ app.get('/',(req,res)=>{
     res.render('index');
 });
 
+app.get('/loggedinuser/patient',(req,res)=>{
+  res.render('nearby');
+})
+
 app.get("/auth/google",
-  passport.authenticate('google', { scope: ["profile"] })
+  passport.authenticate('google', { scope: ["profile","email"] })
 );
 
 app.get('/auth/google/success', 
-  passport.authenticate('google', { failureRedirect: '/' }),
-  function(req, res) {
-    // Successful authentication, redirect home.
-    res.render('aftersigin',{
-      name: userid
-    })
-  });
+  passport.authenticate('google', {successRedirect: '/aftersignup',
+     failureRedirect: '/' }));
 
-app.get('/admin/hospital',(req,res)=>{
-    res.render('adminpage',{
-      step1: "active",
-      step2: "",
-      prevbut: "disabled",
-      form1: "",
-      form2: "hidden",
-      nameOfHospital: ""
-    });
-});
+app.get('/admin/hospital',adminroute.gethospregistration);
 
 app.get("/login", function(req, res){
   res.render("login");
 });
 
+app.get('/aftersignup',authenticate.basicauth,(req,res)=>{
+  res.render('aftersignup',{
+    name: req.user.name
+  });
+})
+
 app.get("/register", function(req, res){
   res.render("register");
 });
 
-app.get('/new-user/:role',(req,res)=>{
-    if(req.params.role=='patient')
-    res.render('patient_registration');
+app.get('/new-user/:role',authenticate.basicauth,(req,res)=>{
+    
+  tempemail['hos'+req.ip]=req.user.email;
+    tempname['hos'+req.ip]=req.user.name;
+  if(req.params.role=='patient')
+    res.render('patient_registration',{
+      name: req.user.name,
+      email: req.user.email,
+      form2: "hidden"
+    });
     else if (req.params.role=='donor')
     res.render('donor-form');
-});
-let tempemail,tempname;
-app.post('/admin/hospital',(req,res)=>{
+    else if (req.params.role=='doctor')
+    res.render('dashboard');
     
-    tempemail=req.body.hospitalemail;
-    tempname=req.body.nameOfHospital;
-    res.render('adminpage',{
-      step1: "",
-      step2: "active",
-      prevbut: "",
-      form1: "hidden",
-      form2: "",
-      nameOfHospital: tempname
-    });
-
 });
-let addr,longt,latt;
-app.post('/admin/hospital/location',(req,res)=>{
-  console.log(req.body);
-  console.log(req.body.lati);
-  longt=req.body.longi;
-  latt=req.body.lati;
-  let addressfind="https://revgeocode.search.hereapi.com/v1/revgeocode?apikey="+process.env.MAP_APIKEY+"&at="+req.body.lati+","+req.body.longi+"&lang=en-US";
-  https.get(addressfind,resp=>{
-    let body = "";
+app.post('/newpatient/location',regpatient.patientlocation);
 
-    resp.on("data", (chunk) => {
-        body += chunk;
+app.post('/newpatient/location/:option',(req,res)=>{
+  if(req.params.option=='save') {
+    console.log(latt['hos'+req.ip]);
+    User.findOne({email: tempemail['hos'+req.ip]},(err,patient)=>{
+      if(patient) {
+        const dat=new Patient({
+          email: tempemail['hos'+req.ip],
+          stage: 1,
+          coordinates: {
+            lat: latt['hos'+req.ip],
+            long: longt['hos'+req.ip]
+          },
+          address: addr['hos'+req.ip]
+        });
+        dat.save();
+      }
     });
-
-    resp.on("end", () => {
-        try {
-            let json = JSON.parse(body);
-            // do something with JSON
-            addr = json.items[0].title;
-            res.send(addr);
-        } catch (error) {
-            console.error(error.message);
-        };
+  } else if (req.params.option=='manual') {
+    User.findOne({email: tempemail['hos'+req.ip]},(err,patient)=>{
+      if(patient) {
+        let addresscleaned=req.body.address.replace(/\s/g, '+');
+    let citycleaned=req.body.city.replace(/\s/g, '+');
+    let countrycleaned=req.body.country.replace(/\s/g, '+');
+    let postalcleaned=req.body.postal.replace(/\s/g, '+');
+    let addressfind="https://geocode.search.hereapi.com/v1/geocode?apikey="+process.env.MAP_APIKEY+"&q="+addresscleaned+"%2C"+postalcleaned+"%2C"+citycleaned+"%2C"+countrycleaned+"&lang=en-US";
+    https.get(addressfind,resp=>{
+      let body = "";
+  
+      resp.on("data", (chunk) => {
+          body += chunk;
+      });
+  
+      resp.on("end", () => {
+          try {
+              let json = JSON.parse(body);
+              // do something with JSON
+              const dat=new Patient({
+                email: tempemail['hos'+req.ip],
+                stage: 1,
+                coordinates: {
+                  lat: json.items[0].position.lat,
+                  long: json.items[0].position.lng
+                },
+                address: json.items[0].title
+              });
+              dat.save();
+          } catch (error) {
+              console.error(error.message);
+          };
+      });
     });
-  });
-  // 
-});
-
-app.post('/admin/hospital/manual',(req,res)=>{
-  let addresscleaned=req.body.address.replace(/\s/g, '+');
-  let citycleaned=req.body.city.replace(/\s/g, '+');
-  let countrycleaned=req.body.country.replace(/\s/g, '+');
-  let postalcleaned=req.body.postal.replace(/\s/g, '+');
-  let addressfind="https://geocode.search.hereapi.com/v1/geocode?apikey="+process.env.MAP_APIKEY+"&q="+addresscleaned+"%2C"+postalcleaned+"%2C"+citycleaned+"%2C"+countrycleaned+"&lang=en-US";
-  https.get(addressfind,resp=>{
-    let body = "";
-
-    resp.on("data", (chunk) => {
-        body += chunk;
-    });
-
-    resp.on("end", () => {
-        try {
-            let json = JSON.parse(body);
-            // do something with JSON
-            addr = json.items[0].title;
-            latt= json.items[0].position.lat;
-            longt=json.items[0].position.lng;
-            const dat=new hospital({
-              name: tempname,
-              email: tempemail,
-              coordinates: {
-                lat: latt,
-                long: longt
-              },
-              address: addr
-            });
-            res.render('successhospital',{
-              name: tempname,
-              email: tempemail
-            });
-            dat.save();
-        } catch (error) {
-            console.error(error.message);
-        };
-    });
-  });
-})
-
-app.post('/admin/hospital/:action',(req,res)=>{
-  let act=req.params.action;
-  if(act=='save') {
-    const dat=new hospital({
-      name: tempname,
-      email: tempemail,
-      coordinates: {
-        lat: latt,
-        long: longt
-      },
-      address: addr
-    });
-    res.render('successhospital',{
-      name: tempname,
-      email: tempemail
-    });
-    dat.save();
-    
-  } else if (act=='reject') {
-    res.render('adminpage',{
-      step1: "",
-      step2: "active",
-      prevbut: "",
-      form1: "hidden",
-      form2: "",
-      nameOfHospital: tempname
+      }
     });
   }
+  res.render('nearby');
+});
+app.post('/admin/hospital',adminroute.posthospregistration);
+
+app.post('/admin/hospital/location',adminroute.posthosplocation);
+
+app.post('/admin/hospital/manual',adminroute.posthosplocmanual);
+
+app.post('/admin/hospital/:action',adminroute.posthosplocchoice);
+
+app.use('/',(req,res)=>{
+  res.render('404');
 })
 
 app.listen(3000,function() {
